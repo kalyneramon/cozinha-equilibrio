@@ -1,73 +1,61 @@
 <?php
-/**
- * The template for displaying Comments.
- *
- * The area of the page that contains comments and the comment form.
- *
- * @package Odin
- * @since 1.9.0
- */
-?>
-<section id="comments" class="content-wrap" itemscope itemtype="http://schema.org/Comment">
-	<?php if ( post_password_required() ) : ?>
-		<p class="nopassword"><?php _e( 'This post is password protected. Enter the password to view all comments.', 'odin' ); ?></p>
-</section><!-- #comments -->
-		<?php
+	if ( post_password_required() ) {
 		return;
-	endif;
+	}
+?>
 
-	if ( have_comments() ) : ?>
-		<h2 id="comments-title" class="page-header">
+<div id="comments" class="comments-area">
+
+	<?php // You can start editing here ?>
+
+	<?php if ( have_comments() ) : ?>
+		<h2 class="comments-title">
 			<?php
-			comments_number( __( '0 Comments', 'odin' ), __( '1 Comment', 'odin' ), __( '% Comments', 'odin' ) );
-			echo ' ' . __( 'to', 'odin' ) . ' <span>&quot;' . get_the_title() . '&quot;</span>';
+				printf( // WPCS: XSS OK.
+					esc_html( _nx( 'One comment on &ldquo;%2$s&rdquo;', '%1$s comments on &ldquo;%2$s&rdquo;', get_comments_number(), 'comments title', 'jointswp' ) ),
+					number_format_i18n( get_comments_number() ),
+					'<span>' . get_the_title() . '</span>'
+				);
 			?>
 		</h2>
-		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
-			<nav id="comment-nav-above">
-				<ul class="pager">
-					<li class="previous"><?php previous_comments_link( __( '&larr; Old Comments', 'odin' ) ); ?></li>
-					<li class="next"><?php next_comments_link( __( 'New Comments &rarr;', 'odin' ) ); ?></li>
-				</ul>
-			</nav>
-		<?php endif; ?>
-		<ul class="media-list">
-			<?php wp_list_comments( array( 'callback' => 'odin_comments_loop' ) ); ?>
-		</ul>
-		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : ?>
-			<nav id="comment-nav-above">
-				<ul class="pager">
-					<li class="previous"><?php previous_comments_link( __( '&larr; Old Comments', 'odin' ) ); ?></li>
-					<li class="next"><?php next_comments_link( __( 'New Comments &rarr;', 'odin' ) ); ?></li>
-				</ul>
-			</nav>
-		<?php endif; ?>
-	<?php endif; ?>
-	<?php if ( ! comments_open() && post_type_supports( get_post_type(), 'comments' ) ) : ?>
-		<p class="nocomments"><?php _e( 'Comments closed.', 'odin' ); ?></p>
-	<?php endif; ?>
+
+		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // Are there comments to navigate through? ?>
+		<nav id="comment-nav-above" class="navigation comment-navigation" role="navigation">
+			<h2 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'jointswp' ); ?></h2>
+			<div class="nav-links">
+
+				<div class="nav-previous"><?php previous_comments_link( esc_html__( 'Older Comments', 'jointswp' ) ); ?></div>
+				<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments', 'jointswp' ) ); ?></div>
+
+			</div><!-- .nav-links -->
+		</nav><!-- #comment-nav-above -->
+		<?php endif; // Check for comment navigation. ?>
+
+		<ol class="commentlist">
+			<?php wp_list_comments('type=comment&callback=joints_comments'); ?>
+		</ol>
+
+		<?php if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) : // Are there comments to navigate through? ?>
+		<nav id="comment-nav-below" class="navigation comment-navigation" role="navigation">
+			<h2 class="screen-reader-text"><?php esc_html_e( 'Comment navigation', 'jointswp' ); ?></h2>
+			<div class="nav-links">
+
+				<div class="nav-previous"><?php previous_comments_link( esc_html__( 'Older Comments', 'jointswp' ) ); ?></div>
+				<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments', 'jointswp' ) ); ?></div>
+
+			</div><!-- .nav-links -->
+		</nav><!-- #comment-nav-below -->
+		<?php endif; // Check for comment navigation. ?>
+
+	<?php endif; // Check for have_comments(). ?>
 
 	<?php
-		$commenter 		= wp_get_current_commenter();
-		$req 			= get_option( 'require_name_email' );
-		$aria_req 		= ( $req ? " aria-required='true'" : '' );
-		$html_req 		= ( $req ? " required='required'" : '' );
-		$html5 			= current_theme_supports( 'html5', 'comment-form' ) ? 'html5' : null;
-		$comment_field 	= '<div class="comment-form-comment form-group"><label class="control-label" for="comment">' . __( 'Comment', 'odin' ) . ' <span class="required text-danger">*</span></label> ' .
-						 '<textarea id="comment" name="comment" class="form-control" cols="45" rows="8" aria-required="true" required="required"></textarea></div>';
-		$fields 		=  array(
-			'author' => '<div class="comment-form-author form-group">' . '<label for="author">' . __( 'Name', 'odin' ) . ( $req ? ' <span class="required text-danger">*</span>' : '' ) . '</label> ' .
-			            '<input id="author" name="author" class="form-control" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30"' . $aria_req . $html_req . ' /></div>',
-			'email'  => '<div class="comment-form-email form-group"><label for="email">' . __( 'E-mail', 'odin' ) . ( $req ? ' <span class="required text-danger">*</span>' : '' ) . '</label> ' .
-			            '<input id="email" name="email" class="form-control" ' . ( $html5 ? 'type="email"' : 'type="text"' ) . ' value="' . esc_attr(  $commenter['comment_author_email'] ) . '" size="30" aria-describedby="email-notes"' . $aria_req . $html_req  . ' /></div>',
-			'url'    => '<div class="comment-form-url form-group"><label for="url">' . __( 'Website', 'odin' ) . '</label> ' .
-			            '<input id="url" name="url" class="form-control" ' . ( $html5 ? 'type="url"' : 'type="text"' ) . ' value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" /></div>'
-		);
-		comment_form( array(
-			'comment_notes_after' 	=> '',
-			'comment_field' 		=> $comment_field,
-			'fields' 				=> apply_filters( 'comment_form_default_fields', $fields ),
-			'class_submit' 			=> 'submit btn btn-default'
-		));
+		// If comments are closed and there are comments, let's leave a little note, shall we?
+		if ( ! comments_open() && '0' != get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) :
 	?>
-</section><!-- #comments -->
+		<p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'jointswp' ); ?></p>
+	<?php endif; ?>
+
+	<?php comment_form(array('class_submit'=>'button')); ?>
+
+</div><!-- #comments -->

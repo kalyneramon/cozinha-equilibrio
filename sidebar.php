@@ -1,20 +1,17 @@
-<?php
-/**
- * The sidebar containing the secondary widget area, displays on homepage, archives and posts.
- *
- * If no active widgets in this sidebar, it will shows Recent Posts, Archives and Tag Cloud widgets.
- *
- * @package Odin
- * @since 2.2.0
- */
-?>
+<div id="sidebar1" class="sidebar large-4 medium-4 columns" role="complementary">
 
-<aside id="sidebar" class="<?php echo odin_classes_page_sidebar_aside(); ?>" role="complementary">
-	<?php
-		if ( ! dynamic_sidebar( 'main-sidebar' ) ) {
-			the_widget( 'WP_Widget_Recent_Posts', array( 'number' => 10 ) );
-			the_widget( 'WP_Widget_Archives', array( 'count' => 0, 'dropdown' => 1 ) );
-			the_widget( 'WP_Widget_Tag_Cloud' );
-		}
-	?>
-</aside><!-- #sidebar -->
+	<?php if ( is_active_sidebar( 'sidebar1' ) ) : ?>
+
+		<?php dynamic_sidebar( 'sidebar1' ); ?>
+
+	<?php else : ?>
+
+	<!-- This content shows up if there are no widgets defined in the backend. -->
+						
+	<div class="alert help">
+		<p><?php _e( 'Please activate some Widgets.', 'jointswp' );  ?></p>
+	</div>
+
+	<?php endif; ?>
+
+</div>

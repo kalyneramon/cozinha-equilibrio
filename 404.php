@@ -1,26 +1,31 @@
-<?php
-/**
- * The template for displaying 404 pages (Not Found).
- *
- * @package Odin
- * @since 2.2.0
- */
+<?php get_header(); ?>
+			
+	<div id="content">
 
-get_header(); ?>
+		<div id="inner-content" class="row">
+	
+			<main id="main" class="large-8 medium-8 columns" role="main">
 
-	<main id="content" class="<?php echo odin_classes_page_full(); ?>" tabindex="-1" role="main">
+				<article id="content-not-found">
+				
+					<header class="article-header">
+						<h1><?php _e( 'Epic 404 - Article Not Found', 'jointswp' ); ?></h1>
+					</header> <!-- end article header -->
+			
+					<section class="entry-content">
+						<p><?php _e( 'The article you were looking for was not found, but maybe try looking again!', 'jointswp' ); ?></p>
+					</section> <!-- end article section -->
 
-			<header class="page-header">
-				<h1 class="page-title"><?php _e( 'Not Found', 'odin' ); ?></h1>
-			</header>
+					<section class="search">
+					    <p><?php get_search_form(); ?></p>
+					</section> <!-- end search section -->
+			
+				</article> <!-- end article -->
+	
+			</main> <!-- end #main -->
 
-			<div class="page-content">
-				<p><?php _e( 'It looks like nothing was found at this location. Maybe try a search?', 'odin' ); ?></p>
+		</div> <!-- end #inner-content -->
 
-				<?php get_search_form(); ?>
-			</div><!-- .page-content -->
+	</div> <!-- end #content -->
 
-	</main><!-- #main -->
-
-<?php
-get_footer();
+<?php get_footer(); ?>
