@@ -4,11 +4,13 @@
 <div class="top-bar" id="top-bar-menu">
 	<div class="top-bar-left float-left">
 		<ul class="menu">
-			<li><a href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a></li>
+			<li><a href="<?php echo home_url(); ?>" title="<?php bloginfo('name'); ?>">
+				<img src="<?php bloginfo('template_url'); ?>/assets/images/logo.png" srcset="<?php bloginfo('template_url'); ?>/assets/images/logo@2x.png 2x"alt="">
+			</a></li>
 		</ul>
 	</div>
 	<div class="top-bar-right show-for-medium">
-		<?php joints_top_nav(); ?>	
+		<?php joints_top_nav(); ?>
 	</div>
 	<div class="top-bar-right float-right show-for-small-only">
 		<ul class="menu">
